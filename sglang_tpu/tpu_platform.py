@@ -618,6 +618,15 @@ def _register_attention_backends() -> None:
 
         return DSV4TPUAttnBackend(runner)
 
+    # Vision: opt in to block-skipping splash for the "tpu" backend.
+    from sglang_tpu.envs import envs as tpu_envs
+
+    if tpu_envs.SGLANG_TPU_ENABLE_VISION_SPLASH_ATTENTION.get():
+        from sglang.srt.layers.attention.vision import QKV_BACKEND_IMPL
+        from sglang_tpu.attention.vision_splash import VisionTpuSplashAttention
+
+        QKV_BACKEND_IMPL["tpu"] = VisionTpuSplashAttention
+
 
 def _register_models() -> None:
     """Add the model implementations that only this package provides to the registry."""
