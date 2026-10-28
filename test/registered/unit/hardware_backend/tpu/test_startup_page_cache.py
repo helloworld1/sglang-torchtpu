@@ -147,6 +147,8 @@ def test_compile_cache_disabled_skips(monkeypatch, tmp_path, caplog, env_name):
     monkeypatch.delenv("TORCHINDUCTOR_CACHE_DIR", raising=False)
     monkeypatch.delenv("JAX_COMPILATION_CACHE_DIR", raising=False)
     monkeypatch.setenv(env_name, "disabled")
+    monkeypatch.setenv("TORCHINDUCTOR_CACHE_DIR", str(tmp_path / "inductor"))
+    monkeypatch.setenv("JAX_COMPILATION_CACHE_DIR", str(tmp_path / "jax"))
     monkeypatch.setattr(
         page_cache, "_filesystem_type", lambda _: pytest.fail("cache disabled")
     )
